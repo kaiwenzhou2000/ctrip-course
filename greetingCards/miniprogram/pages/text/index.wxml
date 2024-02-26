@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="image-container">
+    <image src="{{url}}" class="swiper-image"></image>
+    <!-- <view class="swiper-image"></view> -->
+    <label class="text-container">
+    <view class="name">
+      <view>LOVE,</view>
+      <view>NAME</view>
+    </view>
+    <view class="input-container">
+      <!-- <input class="input" placeholder="请输入文字" bindinput="onInput"></input> -->
+      <textarea value="{{content}}" bindinput="onInput" placeholder="请输入你的祝福吧🫡" class="textarea" placeholder-style="color: #ffffff;font-family: PingFangSC, sans-serif;font-size: 30rpx;font-weight: normal"></textarea>
+      <view class="underline-container">
+        <view class="underline"></view>
+        <view class="underline"></view>
+        <view class="underline"></view>
+      </view>
+    </view>
+    </label>
+    <!-- <view class="name">LOVE, Name</view> -->
+  </view>
+  <view class="tips">2.添加文字祝福</view>
+  <view class="btn" bindtap="onConfirm"><view>确认</view></view>
+</view>

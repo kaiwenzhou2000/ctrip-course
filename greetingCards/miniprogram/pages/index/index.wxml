@@ -1,0 +1,13 @@
+<view class="model" wx:if="{{noserver}}">
+  <image src="../../images/main_s.png"></image>
+  <view class="no_tips">当前小程序无法支持宽屏设备，非常抱歉！</view>
+</view>
+<view class="container">
+  <view class="model">
+    <view class="image-container">
+      <image mode="aspectFit" src="../../images/gift-bg.png"></image>
+    </view>
+    <view class="title">制作语音礼品卡</view>
+    <view class="btn" bindtap="onConfirm"><view>开始制作</view></view>
+  </view>
+</view>

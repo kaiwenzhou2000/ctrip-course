@@ -1,0 +1,43 @@
+<view class="{{isRecording ? 'mask container' : 'container'}}">
+  <view class="image-container">
+    <image src="{{url}}" class="swiper-image"></image>
+    <label class="text-container">
+    <view class="name">
+      <view>LOVE,</view>
+      <view>NAME</view>
+    </view>
+    <view class="input-container">
+      <textarea value="{{content}}" class="textarea" disabled="{{true}}"></textarea>
+      <view class="underline-container">
+        <view class="underline"></view>
+        <view class="underline"></view>
+        <view class="underline"></view>
+      </view>
+    </view>
+    </label>
+  </view>
+  <view class="tips">3.添加语音祝福</view>
+  <!-- 录音案件 -->
+  <view class="recording-container" wx:if="{{tempFilePath === ''}}">
+    <view class="btn" bind:longpress="startRecord" bind:touchend="stopRecord">
+      <image src="/images/mic.png" class="mic-img" mode="aspectFit"></image>
+      <view>长按录制</view>
+    </view>
+  </view>
+  <!-- 正在录音UI -->
+  <view class="voice-circle" wx:if="{{isRecording}}">
+    <image src="/images/mic.png" class="voice-circle-mic" mode="aspectFit"></image>
+  </view>
+  <!-- 录音完成UI -->
+  <view class="recording-container" wx:if="{{!isRecording && tempFilePath !== ''}}">
+    <view class="blank"></view>
+    <view class="btn" bindtap="playRecord">
+      <image src="{{isPlaying ? '/images/stop.png' : '/images/play.png'}}" class="mic-img" mode="aspectFit"></image>
+      <view>播放</view>
+    </view>
+    <view class="btn-smail" bindtap="onConfirm">
+      <image src="/images/check.png" class="mic-img" mode="aspectFit"></image>
+      <view>确认</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,24 @@
+<view class="{{isRecording ? 'mask container' : 'container'}}">
+  <view class="image-container">
+    <image src="{{url}}" class="swiper-image"></image>
+    <label class="text-container">
+    <view class="name">
+      <view>LOVE,</view>
+      <view>{{name}}</view>
+    </view>
+    <view class="input-container">
+      <textarea value="{{content}}" class="textarea" disabled="{{true}}"></textarea>
+      <view class="underline-container">
+        <view class="underline"></view>
+        <view class="underline"></view>
+        <view class="underline"></view>
+      </view>
+    </view>
+    </label>
+  </view>
+  <view class="tips">4.填写署名</view>
+  <view class="name-container">
+    <input value="{{name}}" bindinput="onInput"></input>
+  </view>
+  <view class="btn" bindtap="onConfirm">查看</view>
+</view>

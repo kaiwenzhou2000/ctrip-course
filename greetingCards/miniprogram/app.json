@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/select/index",
+    "pages/text/index",
+    "pages/voice/index",
+    "pages/signature/index",
+    "pages/share/index",
+    "pages/card/index"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

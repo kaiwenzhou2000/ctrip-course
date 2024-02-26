@@ -1,0 +1,26 @@
+<view class="{{isRecording ? 'mask container' : 'container'}}">
+  <view class="image-container">
+    <image src="{{url}}" class="swiper-image"></image>
+    <label class="text-container">
+    <view class="name">
+      <view>LOVE,</view>
+      <view>{{name}}</view>
+    </view>
+    <view class="input-container">
+      <textarea value="{{content}}" class="textarea" disabled="{{true}}"></textarea>
+      <view class="underline-container">
+        <view class="underline"></view>
+        <view class="underline"></view>
+        <view class="underline"></view>
+      </view>
+    </view>
+    </label>
+  </view>
+
+  <view class="recording-container">
+    <view class="btn" bindtap="playRecord">
+      <image src="{{isPlaying ? '/images/stop.png' : '/images/play.png'}}" class="mic-img" mode="aspectFit"></image>
+      <view>播放</view>
+    </view>
+  </view>
+</view>
