@@ -41,4 +41,10 @@ Page({
     that.data.innerAudioContext.src = that.data.audio;
     that.data.innerAudioContext.play();
   },
+  onShareAppMessage() {
+    return {
+      title: "语音礼品卡",
+      path: `/pages/card/index?url=${this.data.url}&content=${this.data.content}&audio=${this.data.audio}&name=${this.data.name}`,
+    };
+  },
 });
