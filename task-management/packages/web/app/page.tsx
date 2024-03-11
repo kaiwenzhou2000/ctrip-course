@@ -3,8 +3,33 @@
 import { useRouter } from "next/navigation";
 import { Table, Header, Form } from "../components";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
-export default function Home() {
+const withAuth = (Component) => {
+  const AuthedComponent = (props) => {
+    const router = useRouter();
+    const user =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("user"))
+        : null;
+
+    useEffect(() => {
+      if (!user) {
+        router.replace("/login");
+      }
+    }, [user, router]);
+
+    if (!user) {
+      return null;
+    }
+
+    return <Component {...props} />;
+  };
+
+  return dynamic(() => Promise.resolve(AuthedComponent), { ssr: false });
+};
+
+function Home() {
   const router = useRouter();
 
   const [tasks, setTasks] = useState([]);
@@ -45,6 +70,20 @@ export default function Home() {
       });
   };
 
+  const onDelete = (id) => {
+    fetch("http://localhost:3001/deleteTask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        fetchData(currentPage);
+      });
+  };
+
   const fetchData = (page: number = 1, limit: number = 10) => {
     fetch("http://localhost:3001/task", {
       method: "POST",
@@ -66,6 +105,12 @@ export default function Home() {
   useEffect(() => {
     fetchData(1);
     const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user === null) {
+      router.push("/login");
+      return;
+    }
+
     setFirstname(user.firstname);
   }, []);
 
@@ -89,8 +134,11 @@ export default function Home() {
           totalPages={totalPages}
           currentPage={currentPage}
           onPaginate={onPaginate}
+          onDelete={onDelete}
         />
       </main>
     </>
   );
 }
+
+export default withAuth(Home);

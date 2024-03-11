@@ -3,8 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import mitt from "mitt";
+import { useRouter } from "next/navigation";
+import { Alert } from "../../components/index";
 
 const Page = () => {
+  const router = useRouter();
+  const emitter = mitt();
+
   const [formData, setFormData] = useState<{
     email: string;
     password: string;
@@ -26,16 +32,31 @@ const Page = () => {
 
   const onComfirm = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:3001/register", {
+    fetch("http://localhost:3001/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ ...formData }),
-    });
+    })
+      .then((res) => res.json())
+      .then(({ code, message }) => {
+        if (code === 0) {
+          router.push("/");
+        } else if (code === -1) {
+          emitter.emit("alert", { message, type: "success" });
+        }
+      });
+
+    // console.log(res);
+
+    // if (res.code === 0) {
+    //   emitter.emit("alert", { message: "注册成功", type: "success" });
+    // }
   };
   return (
     <section className="bg-white">
+      <Alert type="success" />
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
           <div className="absolute inset-0 h-full w-full object-cover">

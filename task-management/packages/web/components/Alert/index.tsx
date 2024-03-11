@@ -1,12 +1,13 @@
 type Props = {
   type: "success" | "fail";
+  message: string;
 };
 
-const Index = ({ type }: Props) => {
-  return type === "success" ? success : fail;
+const Index = ({ type, message }: Props) => {
+  return type === "success" ? success(message) : fail(message);
 };
 
-const success = (
+const success = (message: string) => (
   <div role="alert" className="rounded-xl border border-gray-100 bg-white p-4">
     <div className="flex items-start gap-4">
       <span className="text-green-600">
@@ -29,12 +30,10 @@ const success = (
       <div className="flex-1">
         <strong className="block font-medium text-gray-900">
           {" "}
-          Changes saved{" "}
+          success 🎉{" "}
         </strong>
 
-        <p className="mt-1 text-sm text-gray-700">
-          Your product changes have been saved.
-        </p>
+        <p className="mt-1 text-sm text-gray-700">{message}</p>
       </div>
 
       <button className="text-gray-500 transition hover:text-gray-600">
@@ -59,7 +58,7 @@ const success = (
   </div>
 );
 
-const fail = (
+const fail = (message: string) => (
   <div role="alert" className="rounded border-s-4 border-red-500 bg-red-50 p-4">
     <div className="flex items-center gap-2 text-red-800">
       <svg
@@ -78,11 +77,7 @@ const fail = (
       <strong className="block font-medium"> Something went wrong </strong>
     </div>
 
-    <p className="mt-2 text-sm text-red-700">
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo quasi
-      assumenda numquam deserunt consectetur autem nihil quos debitis dolor
-      culpa.
-    </p>
+    <p className="mt-2 text-sm text-red-700">{message}</p>
   </div>
 );
 

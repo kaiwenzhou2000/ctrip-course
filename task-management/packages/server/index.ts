@@ -95,6 +95,17 @@ app.post("/addTask", async (req, res) => {
   });
 });
 
+app.post("/deleteTask", async (req, res) => {
+  const { id } = req.body;
+
+  await Task.findByIdAndDelete(id);
+
+  res.json({
+    code: 0,
+    message: "ok",
+  });
+});
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
