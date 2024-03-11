@@ -1,25 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { Alter } from "../../components/index";
 import Image from "next/image";
+import Link from "next/link";
 
 const Page = () => {
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [formData, setFormData] = useState<{
+    email: string;
+    password: string;
+    firstname: string;
+    lastname: string;
+  }>({
+    email: "",
+    password: "",
+    firstname: "",
+    lastname: "",
+  });
+
+  const onChange = (key, value) => {
+    setFormData({
+      ...formData,
+      [key]: value,
+    });
+  };
 
   const onComfirm = async (e) => {
     e.preventDefault();
-
     const res = await fetch("http://localhost:3001/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ ...formData }),
     });
-    console.log(res);
   };
   return (
     <section className="bg-white">
@@ -52,12 +65,11 @@ const Page = () => {
             </a>
 
             <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-              Welcome to Squid 🦑
+              Welcome to Task Management 📚
             </h1>
 
             <p className="mt-4 leading-relaxed text-gray-500">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-              nam dolorum aliquam, quibusdam aperiam voluptatum.
+              创建和管理的任务 -- 作者: 周凯文-华东理工大学
             </p>
 
             <form action="#" className="mt-8 grid grid-cols-6 gap-6">
@@ -66,10 +78,12 @@ const Page = () => {
                   htmlFor="FirstName"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  First Name
+                  名
                 </label>
 
                 <input
+                  defaultValue={formData.firstname}
+                  onChange={(e) => onChange("firstname", e.target.value)}
                   type="text"
                   id="FirstName"
                   name="first_name"
@@ -82,10 +96,12 @@ const Page = () => {
                   htmlFor="LastName"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Last Name
+                  姓
                 </label>
 
                 <input
+                  defaultValue={formData.lastname}
+                  onChange={(e) => onChange("lastname", e.target.value)}
                   type="text"
                   id="LastName"
                   name="last_name"
@@ -99,10 +115,12 @@ const Page = () => {
                   className="block text-sm font-medium text-gray-700"
                 >
                   {" "}
-                  Email{" "}
+                  邮箱{" "}
                 </label>
 
                 <input
+                  defaultValue={formData.email}
+                  onChange={(e) => onChange("email", e.target.value)}
                   type="email"
                   id="Email"
                   name="email"
@@ -116,10 +134,12 @@ const Page = () => {
                   className="block text-sm font-medium text-gray-700"
                 >
                   {" "}
-                  Password{" "}
+                  密码{" "}
                 </label>
 
                 <input
+                  defaultValue={formData.password}
+                  onChange={(e) => onChange("password", e.target.value)}
                   type="password"
                   id="Password"
                   name="password"
@@ -127,63 +147,19 @@ const Page = () => {
                 />
               </div>
 
-              <div className="col-span-6 sm:col-span-3">
-                <label
-                  htmlFor="PasswordConfirmation"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password Confirmation
-                </label>
-
-                <input
-                  type="password"
-                  id="PasswordConfirmation"
-                  name="password_confirmation"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div className="col-span-6">
-                <label htmlFor="MarketingAccept" className="flex gap-4">
-                  <input
-                    type="checkbox"
-                    id="MarketingAccept"
-                    name="marketing_accept"
-                    className="size-5 rounded-md border-gray-200 bg-white shadow-sm"
-                  />
-
-                  <span className="text-sm text-gray-700">
-                    I want to receive emails about events, product updates and
-                    company announcements.
-                  </span>
-                </label>
-              </div>
-
-              <div className="col-span-6">
-                <p className="text-sm text-gray-500">
-                  By creating an account, you agree to our
-                  <a href="#" className="text-gray-700 underline">
-                    {" "}
-                    terms and conditions{" "}
-                  </a>
-                  and
-                  <a href="#" className="text-gray-700 underline">
-                    privacy policy
-                  </a>
-                  .
-                </p>
-              </div>
-
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
-                  Create an account
+                <button
+                  onClick={onComfirm}
+                  className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+                >
+                  创建帐号
                 </button>
 
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                  Already have an account?
-                  <a href="#" className="text-gray-700 underline">
-                    Log in
-                  </a>
+                  已经有帐号了?
+                  <Link href="../login" className="text-gray-700 underline">
+                    登录
+                  </Link>
                   .
                 </p>
               </div>

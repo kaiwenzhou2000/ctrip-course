@@ -1,6 +1,46 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Page = () => {
+  const router = useRouter();
+
+  const [fromData, setFormData] = useState<{
+    email: string;
+    password: string;
+  }>({
+    email: "",
+    password: "",
+  });
+
+  const onChange = (key: string, value: string) => {
+    setFormData({ ...fromData, [key]: value });
+  };
+
+  const onLogin = (e) => {
+    e.preventDefault();
+
+    // console.log();
+    fetch("http://localhost:3001/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(fromData),
+    })
+      .then((res) => res.json())
+      .then(({ data, code, message }) => {
+        // 存储用户信息
+        localStorage.setItem("user", JSON.stringify(data));
+        if (code === 0) {
+          router.push("/");
+        } else {
+          alert(message);
+        }
+      });
+  };
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-lg">
@@ -27,9 +67,11 @@ const Page = () => {
 
             <div className="relative">
               <input
+                defaultValue={fromData.email}
+                onChange={(e) => onChange("email", e.target.value)}
                 type="email"
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                placeholder="Enter email"
+                placeholder="输入邮箱"
               />
 
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -58,9 +100,11 @@ const Page = () => {
 
             <div className="relative">
               <input
+                defaultValue={fromData.password}
+                onChange={(e) => onChange("password", e.target.value)}
                 type="password"
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                placeholder="Enter password"
+                placeholder="输入密码"
               />
 
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -91,14 +135,15 @@ const Page = () => {
           <button
             type="submit"
             className="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"
+            onClick={onLogin}
           >
-            Sign in
+            登录
           </button>
 
           <p className="text-center text-sm text-gray-500">
-            No account?
+            没有帐号?
             <Link className="underline" href={"../register"}>
-              Sign up
+              注册
             </Link>
           </p>
         </form>
