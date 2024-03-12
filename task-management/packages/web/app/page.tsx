@@ -36,7 +36,16 @@ function Home() {
   const [totalPages, setTotalPages] = useState<number>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [formVisible, setFormVisible] = useState(false);
+  const [formMode, setFormMode] = useState<"create" | "edit" | "view">(
+    "create"
+  );
   const [firstname, setFirstname] = useState("");
+  const [rawFormData, setRawFormData] = useState({
+    name: "",
+    importance: 0,
+    status: 0,
+    description: "",
+  });
 
   const onPaginate = (page) => {
     setCurrentPage(page);
@@ -44,6 +53,7 @@ function Home() {
   };
 
   const onCreateTask = () => {
+    setFormMode("create");
     setFormVisible(true);
   };
 
@@ -52,22 +62,42 @@ function Home() {
   };
 
   const onLogout = () => {
+    localStorage.clear();
     router.push("/login");
   };
 
-  const onSubmit = (data) => {
-    fetch("http://localhost:3001/addTask", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        fetchData();
-        setFormVisible(false);
-      });
+  const onSubmit = (data, mode) => {
+    switch (mode) {
+      case "create":
+        fetch("http://localhost:3001/addTask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            fetchData();
+            setFormVisible(false);
+          });
+
+        break;
+      case "edit":
+        fetch("http://localhost:3001/updateTask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: data._id, task: data }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            fetchData();
+            setFormVisible(false);
+          });
+        break;
+    }
   };
 
   const onDelete = (id) => {
@@ -82,6 +112,22 @@ function Home() {
       .then((data) => {
         fetchData(currentPage);
       });
+  };
+
+  const onEdit = (id) => {
+    setFormMode("edit");
+    setFormVisible(true);
+
+    const task = tasks.find((task) => task._id === id);
+    setRawFormData(task);
+  };
+
+  const onView = (id) => {
+    setFormMode("view");
+    setFormVisible(true);
+
+    const task = tasks.find((task) => task._id === id);
+    setRawFormData(task);
   };
 
   const fetchData = (page: number = 1, limit: number = 10) => {
@@ -126,7 +172,8 @@ function Home() {
           <Form
             onCancel={onCancel}
             onSubmit={onSubmit}
-            rawData={{ name: "", importance: 0, status: 0, description: "" }}
+            rawData={rawFormData}
+            mode={formMode}
           />
         )}
         <Table
@@ -135,6 +182,8 @@ function Home() {
           currentPage={currentPage}
           onPaginate={onPaginate}
           onDelete={onDelete}
+          onEidt={onEdit}
+          onView={onView}
         />
       </main>
     </>

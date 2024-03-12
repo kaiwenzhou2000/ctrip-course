@@ -8,7 +8,10 @@ const Index = ({ type, message }: Props) => {
 };
 
 const success = (message: string) => (
-  <div role="alert" className="rounded-xl border border-gray-100 bg-white p-4">
+  <div
+    role="alert"
+    className="rounded-xl border border-gray-100 bg-white p-4 absolute"
+  >
     <div className="flex items-start gap-4">
       <span className="text-green-600">
         <svg
@@ -59,7 +62,10 @@ const success = (message: string) => (
 );
 
 const fail = (message: string) => (
-  <div role="alert" className="rounded border-s-4 border-red-500 bg-red-50 p-4">
+  <div
+    role="alert"
+    className="rounded border-s-4 border-red-500 bg-red-50 p-4 absolute"
+  >
     <div className="flex items-center gap-2 text-red-800">
       <svg
         xmlns="http://www.w3.org/2000/svg"

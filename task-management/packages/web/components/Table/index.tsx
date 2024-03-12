@@ -13,6 +13,8 @@ type Props = {
   totalPages: number;
   onPaginate: (page: number) => void;
   onDelete: (id: string) => void;
+  onEidt: (id: string) => void;
+  onView: (id: string) => void;
 };
 
 const success = () => (
@@ -95,6 +97,8 @@ const Index = ({
   currentPage,
   onPaginate,
   onDelete,
+  onView,
+  onEidt,
 }: Props) => {
   return (
     <div className="rounded-lg border border-gray-200 w-full">
@@ -137,12 +141,20 @@ const Index = ({
                 </td>
                 <td className="whitespace-nowrap px-4 py-2 text-center flex justify-around">
                   <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onView(item._id);
+                    }}
                     href="#"
                     className="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700 text-center"
                   >
                     查看
                   </a>
                   <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onEidt(item._id);
+                    }}
                     href="#"
                     className="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700 text-center"
                   >

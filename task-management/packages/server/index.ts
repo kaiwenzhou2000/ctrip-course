@@ -22,7 +22,7 @@ app.post("/register", async (req, res) => {
   // 检查用户名是否已存在
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(400).json({ code: -1, message: "email already exists" });
+    return res.status(400).json({ code: -1, message: "邮箱已经被注册" });
   }
 
   // 对密码进行哈希处理
@@ -46,13 +46,13 @@ app.post("/login", async (req, res) => {
   // 检查用户是否存在
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(400).json({ code: -1, message: "User does not exist" });
+    return res.status(400).json({ code: -1, message: "用户不存在" });
   }
 
   // 检查密码是否正确
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
   if (!isPasswordCorrect) {
-    return res.status(400).json({ code: -1, message: "Incorrect password" });
+    return res.status(400).json({ code: -1, message: "密码错误" });
   }
 
   // 登录成功
@@ -99,6 +99,17 @@ app.post("/deleteTask", async (req, res) => {
   const { id } = req.body;
 
   await Task.findByIdAndDelete(id);
+
+  res.json({
+    code: 0,
+    message: "ok",
+  });
+});
+
+app.post("/updateTask", async (req, res) => {
+  const { id, task } = req.body;
+
+  await Task.findByIdAndUpdate(id, task);
 
   res.json({
     code: 0,

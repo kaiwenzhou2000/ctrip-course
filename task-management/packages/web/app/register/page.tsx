@@ -6,10 +6,14 @@ import Link from "next/link";
 import mitt from "mitt";
 import { useRouter } from "next/navigation";
 import { Alert } from "../../components/index";
+import { Cabin_Condensed } from "next/font/google";
 
 const Page = () => {
   const router = useRouter();
   const emitter = mitt();
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const [formData, setFormData] = useState<{
     email: string;
@@ -32,6 +36,20 @@ const Page = () => {
 
   const onComfirm = async (e) => {
     e.preventDefault();
+
+    if (
+      formData.email === "" ||
+      formData.password === "" ||
+      formData.firstname === "" ||
+      formData.lastname === ""
+    ) {
+      setAlertVisible(true);
+      setAlertMessage("请填写完整信息");
+      setTimeout(() => {
+        setAlertVisible(false);
+      }, 3000);
+      return;
+    }
     fetch("http://localhost:3001/register", {
       method: "POST",
       headers: {
@@ -44,19 +62,17 @@ const Page = () => {
         if (code === 0) {
           router.push("/");
         } else if (code === -1) {
-          emitter.emit("alert", { message, type: "success" });
+          setAlertVisible(true);
+          setAlertMessage(message);
+          setTimeout(() => {
+            setAlertVisible(false);
+          }, 3000);
         }
       });
-
-    // console.log(res);
-
-    // if (res.code === 0) {
-    //   emitter.emit("alert", { message: "注册成功", type: "success" });
-    // }
   };
   return (
     <section className="bg-white">
-      <Alert type="success" />
+      {alertVisible && <Alert type="fail" message={alertMessage} />}
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
           <div className="absolute inset-0 h-full w-full object-cover">

@@ -8,12 +8,13 @@ type FormData = {
 };
 
 type Props = {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: FormData, model: "create" | "edit" | "view") => void;
   onCancel: () => void;
   rawData: FormData;
+  mode: "create" | "edit" | "view";
 };
 
-const Index = ({ onSubmit, onCancel, rawData }: Props) => {
+const Index = ({ onSubmit, onCancel, rawData, mode }: Props) => {
   const [data, setData] = useState<FormData>(rawData);
 
   const handleInput = (v: any, key: string) => {
@@ -33,6 +34,71 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
       : "block w-full cursor-pointer rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black border-black bg-black text-white";
   };
 
+  const buttonList = (mode: "create" | "edit" | "view") => {
+    switch (mode) {
+      case "create":
+        return (
+          <div className="mt-4 flex justify-around">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onSubmit(data, mode);
+              }}
+              className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+            >
+              确认创建
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onCancel();
+              }}
+              className="inline-block w-full rounded-lg bg-white px-5 py-3 font-medium text-black sm:w-auto border border-black border-1"
+            >
+              取消创建
+            </button>
+          </div>
+        );
+      case "edit":
+        return (
+          <div className="mt-4 flex justify-around">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onSubmit(data, mode);
+              }}
+              className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+            >
+              确认修改
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onCancel();
+              }}
+              className="inline-block w-full rounded-lg bg-white px-5 py-3 font-medium text-black sm:w-auto border border-black border-1"
+            >
+              取消修改
+            </button>
+          </div>
+        );
+      case "view":
+        return (
+          <div className="mt-4 flex justify-around">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onCancel();
+              }}
+              className="inline-block w-full rounded-lg bg-white px-5 py-3 font-medium text-black sm:w-auto border border-black border-1"
+            >
+              关闭查看
+            </button>
+          </div>
+        );
+    }
+  };
+
   return (
     <section className="bg-gray-100 absolute w-3/4">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -44,6 +110,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                   Name
                 </label>
                 <input
+                  disabled={mode === "view"}
                   className="w-full rounded-lg border-gray-200 p-3 text-sm"
                   placeholder="任务名称"
                   type="text"
@@ -67,6 +134,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                   </label>
                   <div className="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
                     <button
+                      disabled={mode === "view"}
                       className={isImportantFocus(0)}
                       onClick={(e) => {
                         e.preventDefault();
@@ -76,6 +144,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                       P1
                     </button>
                     <button
+                      disabled={mode === "view"}
                       className={isImportantFocus(1)}
                       onClick={(e) => {
                         e.preventDefault();
@@ -85,6 +154,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                       P2
                     </button>
                     <button
+                      disabled={mode === "view"}
                       className={isImportantFocus(2)}
                       onClick={(e) => {
                         e.preventDefault();
@@ -94,6 +164,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                       P3
                     </button>
                     <button
+                      disabled={mode === "view"}
                       className={isImportantFocus(3)}
                       onClick={(e) => {
                         e.preventDefault();
@@ -103,6 +174,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                       P4
                     </button>
                     <button
+                      disabled={mode === "view"}
                       className={isImportantFocus(4)}
                       onClick={(e) => {
                         e.preventDefault();
@@ -123,6 +195,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                     tabIndex={0}
                   >
                     <input
+                      disabled={mode === "view"}
                       className="sr-only"
                       id="Option1"
                       type="radio"
@@ -145,6 +218,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                     tabIndex={0}
                   >
                     <input
+                      disabled={mode === "view"}
                       className="sr-only"
                       id="Option2"
                       type="radio"
@@ -167,6 +241,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                     tabIndex={0}
                   >
                     <input
+                      disabled={mode === "view"}
                       className="sr-only"
                       id="Option3"
                       type="radio"
@@ -189,6 +264,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                 </label>
 
                 <textarea
+                  disabled={mode === "view"}
                   className="w-full rounded-lg border-gray-200 p-3 text-sm"
                   placeholder="任务描述"
                   rows={8}
@@ -198,26 +274,7 @@ const Index = ({ onSubmit, onCancel, rawData }: Props) => {
                 ></textarea>
               </div>
 
-              <div className="mt-4 flex justify-around">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onSubmit(data);
-                  }}
-                  className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
-                >
-                  确认创建
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onCancel();
-                  }}
-                  className="inline-block w-full rounded-lg bg-white px-5 py-3 font-medium text-black sm:w-auto border border-black border-1"
-                >
-                  取消创建
-                </button>
-              </div>
+              {buttonList(mode)}
             </form>
           </div>
         </div>
