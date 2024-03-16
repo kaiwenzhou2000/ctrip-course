@@ -5,24 +5,45 @@ import { Table, Header, Form } from "../components";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
+let token;
+if (typeof window !== "undefined") {
+  try {
+    token = window.document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token"))
+      .split("=")[1];
+  } catch (e) {
+    token = null;
+  }
+}
+
+const auth = async () => {
+  try {
+    const response = await fetch("http://localhost:3001/auth", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // 假设user对象中存储了token
+      },
+    });
+
+    const data = await response.json();
+    return 0;
+  } catch (error) {
+    return -1;
+  }
+};
+
 const withAuth = (Component) => {
-  const AuthedComponent = (props) => {
+  const AuthedComponent = async (props) => {
     const router = useRouter();
-    const user =
-      typeof window !== "undefined"
-        ? JSON.parse(localStorage.getItem("user"))
-        : null;
+    const res = await auth();
 
-    useEffect(() => {
-      if (!user) {
-        router.replace("/login");
-      }
-    }, [user, router]);
+    console.log(res);
 
-    if (!user) {
-      return null;
+    if (res === -1) {
+      router.replace("/login");
     }
-
     return <Component {...props} />;
   };
 
@@ -39,7 +60,6 @@ function Home() {
   const [formMode, setFormMode] = useState<"create" | "edit" | "view">(
     "create"
   );
-  const [firstname, setFirstname] = useState("");
   const [rawFormData, setRawFormData] = useState({
     name: "",
     importance: 0,
@@ -69,7 +89,7 @@ function Home() {
   };
 
   const onLogout = () => {
-    localStorage.clear();
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.push("/login");
   };
 
@@ -80,6 +100,7 @@ function Home() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         })
@@ -95,6 +116,7 @@ function Home() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ id: data._id, task: data }),
         })
@@ -112,6 +134,7 @@ function Home() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ id }),
     })
@@ -142,6 +165,7 @@ function Home() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         page,
@@ -157,23 +181,11 @@ function Home() {
 
   useEffect(() => {
     fetchData(1);
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (user === null) {
-      router.push("/login");
-      return;
-    }
-
-    setFirstname(user.firstname);
   }, []);
 
   return (
     <>
-      <Header
-        onLogout={onLogout}
-        onCreateTask={onCreateTask}
-        name={firstname}
-      />
+      <Header onLogout={onLogout} onCreateTask={onCreateTask} />
       <main className="flex w-5/6 h-4/5 mx-auto flex-col items-center justify-between p-4">
         {formVisible && (
           <Form
